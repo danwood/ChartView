@@ -18,16 +18,16 @@ extension CGPoint {
 		var maximumValue: Double = 0.0
 
 		if case .explicit(let range) = limits.yLimit {
-			maximumValue = range.lowerBound
-			minimumValue = range.upperBound
+			minimumValue = range.lowerBound
+			maximumValue = range.upperBound
 		}
 		else {
 			maximumValue = data.max() ?? 0.0	// get the data's max, but then we'll probably adjust below
 
 			if limits.symmetrical {
 				// If we want symmetrical above and below Y axis, we have to take absolute value of negative values into account
-				let negativeMagnitude = abs(data.min() ?? 0.0)
-				maximumValue = max(maximumValue, negativeMagnitude)
+				let minMagnitude = abs(data.min() ?? 0.0)
+				maximumValue = max(maximumValue, minMagnitude)
 			}
 
 			// Now adjust maximum from data to round up to a nice value
@@ -113,17 +113,22 @@ extension CGPoint {
 			
 		}
 
+		print("RANGE: \(minimumValue) - \(maximumValue)")
 
 
 		if minimumValue != maximumValue {
 			if minimumValue <= 0 {
-				stepHeight = (frame.size.height - lineWidth) / CGFloat(maximumValue + minimumValue)	// negative number means include span between neg and pos
+				stepHeight = (frame.size.height - lineWidth) / CGFloat(maximumValue + abs(minimumValue))	// negative number means include span between neg and pos
+				print("negative minimum. stepHeight = \(stepHeight)")
 			} else {
 				stepHeight = (frame.size.height - lineWidth) / CGFloat(maximumValue - minimumValue)
+				print("positive minimum. stepHeight = \(stepHeight)")
 			}
 			return CGPoint(x: stepWidth, y: stepHeight)
 		}
 		else {
+
+			// This isn't really right, what if you have a really flat graph
 			return .zero
 		}
 	}
