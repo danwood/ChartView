@@ -14,15 +14,15 @@ extension CGPoint {
         // stepHeight
         var stepHeight: CGFloat = 0.0
 
-        var min: Double?
-        var max: Double?
+		var min: Double = 0.0
+        var max: Double = 0.0
         if let minPoint = data.min(), let maxPoint = data.max(), minPoint != maxPoint {
             min = minPoint
             max = maxPoint
         } else {
             return .zero
         }
-        if let min = min, let max = max, min != max {
+        if min != max {
             if min <= 0 {
                 stepHeight = (frame.size.height - lineWidth) / CGFloat(max + min)	// negative number means include span between neg and pos
             } else {
