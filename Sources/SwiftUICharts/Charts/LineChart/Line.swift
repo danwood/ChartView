@@ -11,7 +11,7 @@ public struct Line: View {
     @State var touchLocation: CGPoint = .zero
     @State private var showFull: Bool = false
     var step: CGPoint {
-		return CGPoint.getStep(frame: frame, lineWidth: style.lineWidth, data: chartData.data)
+		return CGPoint.getStep(frame: frame, lineWidth: style.lineWidth, data: chartData.data, limits:style.limits)
     }
 
     var path: Path {

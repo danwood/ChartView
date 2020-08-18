@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension CGPoint {
-	static func getStep(frame: CGRect, lineWidth: CGFloat, data: [Double]) -> CGPoint {
+	static func getStep(frame: CGRect, lineWidth: CGFloat, data: [Double], limits: ChartLimits ) -> CGPoint {
 
 		// Linewidth is subtracted from frame height so thick lines don't get clipped. Drawing needs to also take lineWidth into account.
 
