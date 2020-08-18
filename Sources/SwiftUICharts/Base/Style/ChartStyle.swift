@@ -22,7 +22,7 @@ public struct ChartLimits : Hashable {
 
 	var max: ChartLimit
 	var min: ChartLimit? = nil		// if nil, then symmetrical (taking into account negative numbers)
-	var symmetrical: Bool = false	// if ChartMin is nil, then min is either zero or negative of ChartMax.
+	var symmetrical: Bool = false	// True overrides min. If ChartMin is nil, then min is either zero or negative of ChartMax.
 }
 
 

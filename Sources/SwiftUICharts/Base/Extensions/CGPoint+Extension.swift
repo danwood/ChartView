@@ -14,41 +14,50 @@ extension CGPoint {
 		// stepHeight
 		var stepHeight: CGFloat = 0.0
 
-		var min: Double = 0.0
-		var max: Double = 0.0
+		var minimumValue: Double = 0.0
+		var maximumValue: Double = 0.0
 
 		if case .explicit(let value) = limits.max {
-			max = value
+			maximumValue = value
 		}
 		else {
-			max = data.max() ?? 0.0	// get the data's max, but then we'll probably adjust below
+			maximumValue = data.max() ?? 0.0	// get the data's max, but then we'll probably adjust below
+
+			if limits.symmetrical {
+				// If we want symmetrical above and below Y axis, we have to take absolute value of negative values into account
+				let negativeMagnitude = abs(data.min() ?? 0.0)
+				maximumValue = max(maximumValue, negativeMagnitude)
+			}
+
+			// Now adjust maximum from data to round up to a nice value
+
 			switch(limits.max) {
 				case .powerOfTen:
 					// bump up to 10, 100, 1000 etc.
-					let numPlaces = ceil(log10(max))	// round up the log10
-					max = __exp10(numPlaces)
-					print("powerOfTen \(max)")
+					let numPlaces = ceil(log10(maximumValue))	// round up the log10
+					maximumValue = __exp10(numPlaces)
+					print("powerOfTen \(maximumValue)")
 				case .halfPowerOfTen:
 					// bump up to 5, 10, 50, 100, 500, 1000
-					let theLog10 = log10(max)
+					let theLog10 = log10(maximumValue)
 					let fiveLog10 = log10(5.0)
 					let theFloor = floor(theLog10)
 					let fractionalLog10 = theLog10 - theFloor
 					if fractionalLog10 >= fiveLog10 {
-						max = __exp10(theFloor + 1)	// max is 10, 100, 1000 etc.
-						print("halfPowerOfTen startingWithTen \(max)")
+						maximumValue = __exp10(theFloor + 1)	// max is 10, 100, 1000 etc.
+						print("halfPowerOfTen startingWithTen \(maximumValue)")
 					}
 					else {
-						max = __exp10(theFloor + fiveLog10)	// max 5, 50, 500, 5000 etc.
-						print("halfPowerOfTen startingWithFive \(max)")
+						maximumValue = __exp10(theFloor + fiveLog10)	// max 5, 50, 500, 5000 etc.
+						print("halfPowerOfTen startingWithFive \(maximumValue)")
 					}
 				case .firstSignificant:
 
-					print("firstSignificant starting max = \(max)")
+					print("firstSignificant starting max = \(maximumValue)")
 																	// 98  ; 1000 ; 5678
-					var numPlaces = 1 + floor(log10(max))			// 2   ; 4    ; 4
+					var numPlaces = 1 + floor(log10(maximumValue))			// 2   ; 4    ; 4
 					print("numPlaces = \(numPlaces)")
-					let normalized = max / __exp10(numPlaces - 1) 	// 9.8 ; 1.000; 5.678
+					let normalized = maximumValue / __exp10(numPlaces - 1) 	// 9.8 ; 1.000; 5.678
 					print("normalized = \(normalized)")
 					let normalizedRoundedUp = ceil(normalized)		// 10.0; 1.0; 6.0
 					print("normalizedRoundedUp = \(normalizedRoundedUp)")
@@ -57,16 +66,16 @@ extension CGPoint {
 					print("numPlaces = \(numPlaces)")
 					let multiplier = __exp10(numPlaces)				// 100 ; 1000 ; 1000
 					print("multiplier = \(multiplier)")
-					max = normalizedRoundedUp * multiplier			// 100 ; 1000 ; 6000
-					print("firstSignificant max = \(max)")
+					maximumValue = normalizedRoundedUp * multiplier			// 100 ; 1000 ; 6000
+					print("firstSignificant max = \(maximumValue)")
 
 				case .secondSignificant:
 
-					print("secondSignificant starting max = \(max)")
+					print("secondSignificant starting max = \(maximumValue)")
 																	// 98  ; 1000 ; 5678
-					var numPlaces = 1 + floor(log10(max))			// 2   ; 4    ; 4
+					var numPlaces = 1 + floor(log10(maximumValue))			// 2   ; 4    ; 4
 					print("numPlaces = \(numPlaces)")
-					let normalized = max / __exp10(numPlaces - 2) 	// 98 ; 10.00; 56.78
+					let normalized = maximumValue / __exp10(numPlaces - 2) 	// 98 ; 10.00; 56.78
 					print("normalized = \(normalized)")
 					let normalizedRoundedUp = ceil(normalized)		// 98 ; 10   ; 57
 					print("normalizedRoundedUp = \(normalizedRoundedUp)")
@@ -75,8 +84,8 @@ extension CGPoint {
 					print("numPlaces = \(numPlaces)")
 					let multiplier = __exp10(numPlaces-1)			// 1   ; 100  ; 100
 					print("multiplier = \(multiplier)")
-					max = normalizedRoundedUp * multiplier			// 980 ; 1000 ; 5700
-					print("secondSignificant max = \(max)")
+					maximumValue = normalizedRoundedUp * multiplier			// 980 ; 1000 ; 5700
+					print("secondSignificant max = \(maximumValue)")
 
 					break;
 
@@ -89,13 +98,35 @@ extension CGPoint {
 			}
 		}
 
-		min = data.min() ?? 0.0
+		if limits.symmetrical {
+			// Our specification is that if this is set, then we IGNORE limits.min preferences (though we will make use of minimum values) to keep the chart symmetrical.
+			minimumValue = -maximumValue	// same below the axis as above
+		}
+		else {
+			// Not symmetrical - now we get a chance to look at any minimum specified
 
-		if min != max {
-			if min <= 0 {
-				stepHeight = (frame.size.height - lineWidth) / CGFloat(max + min)	// negative number means include span between neg and pos
+			minimumValue = data.min() ?? 0.0
+
+
+			// TODO
+
+			if let minLimits = limits.min {
+
+
+
+			} else {	// no mininum limit specified, so use the same preference as the maximum, but with our minimum value
+
+
+			}
+		}
+
+
+
+		if minimumValue != maximumValue {
+			if minimumValue <= 0 {
+				stepHeight = (frame.size.height - lineWidth) / CGFloat(maximumValue + minimumValue)	// negative number means include span between neg and pos
 			} else {
-				stepHeight = (frame.size.height - lineWidth) / CGFloat(max - min)
+				stepHeight = (frame.size.height - lineWidth) / CGFloat(maximumValue - minimumValue)
 			}
 			return CGPoint(x: stepWidth, y: stepHeight)
 		}
