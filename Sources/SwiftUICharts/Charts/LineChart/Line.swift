@@ -10,7 +10,6 @@ public struct Line: View {
     @State var showIndicator: Bool = false
     @State var touchLocation: CGPoint = .zero
     @State private var showFull: Bool = false
-    @State var showBackground: Bool = true
     var step: CGPoint {
 		return CGPoint.getStep(frame: frame, lineWidth: style.lineWidth, data: chartData.data)
     }
@@ -44,7 +43,7 @@ public struct Line: View {
     public var body: some View {
         GeometryReader { geometry in
             ZStack {
-                if self.showFull && self.showBackground {
+				if self.showFull && self.style.showBackground {
                     self.getBackgroundPathView()
                 }
                 self.getLinePathView()
