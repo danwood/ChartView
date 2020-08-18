@@ -1,10 +1,10 @@
 import SwiftUI
 
 extension CGPoint {
-    static func getStep(frame: CGRect, data: [Double]) -> CGPoint {
-        let padding: CGFloat = 30.0
+	static func getStep(frame: CGRect, lineWidth: CGFloat, data: [Double]) -> CGPoint {
 
-        // stepWidth
+		// Linewidth is subtracted from frame height so thick lines don't get clipped. Drawing needs to also take lineWidth into account.
+
         var stepWidth: CGFloat = 0.0
         if data.count < 2 {
             stepWidth = 0.0
@@ -24,9 +24,9 @@ extension CGPoint {
         }
         if let min = min, let max = max, min != max {
             if min <= 0 {
-                stepHeight = (frame.size.height - padding) / CGFloat(max - min)
+                stepHeight = (frame.size.height - lineWidth) / CGFloat(max + min)	// negative number means include span between neg and pos
             } else {
-                stepHeight = (frame.size.height - padding) / CGFloat(max + min)
+                stepHeight = (frame.size.height - lineWidth) / CGFloat(max - min)
             }
         }
 

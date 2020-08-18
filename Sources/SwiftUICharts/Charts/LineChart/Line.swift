@@ -11,33 +11,34 @@ public struct Line: View {
     @State var touchLocation: CGPoint = .zero
     @State private var showFull: Bool = false
     @State var showBackground: Bool = true
-    var curvedLines: Bool = true
     var step: CGPoint {
-        return CGPoint.getStep(frame: frame, data: chartData.data)
+		return CGPoint.getStep(frame: frame, lineWidth: style.lineWidth, data: chartData.data)
     }
 
     var path: Path {
         let points = chartData.data
 
-        if curvedLines {
+		if style.curvedLines {
             return Path.quadCurvedPathWithPoints(points: points,
                                                  step: step,
-                                                 globalOffset: nil)
+												 yOffset: style.lineWidth/2)
         }
 
-        return Path.linePathWithPoints(points: points, step: step)
+		return Path.linePathWithPoints(points: points, step: step,
+									   yOffset: style.lineWidth/2)
     }
     
     var closedPath: Path {
         let points = chartData.data
 
-        if curvedLines {
+		if style.curvedLines {
             return Path.quadClosedCurvedPathWithPoints(points: points,
                                             step: step,
-                                            globalOffset: nil)
+											yOffset: style.lineWidth/2)
         }
 
-        return Path.closedLinePathWithPoints(points: points, step: step)
+		return Path.closedLinePathWithPoints(points: points, step: step,
+											 yOffset: style.lineWidth/2)
     }
     
     public var body: some View {
@@ -110,7 +111,7 @@ extension Line {
             .stroke(LinearGradient(gradient: style.foregroundColor.first?.gradient ?? ColorGradient.orangeBright.gradient,
                                    startPoint: .leading,
                                    endPoint: .trailing),
-                    style: StrokeStyle(lineWidth: 3, lineJoin: .round))
+					style: StrokeStyle(lineWidth: style.lineWidth, lineJoin: .round))
             .rotationEffect(.degrees(180), anchor: .center)
             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
             .animation(Animation.easeOut(duration: 1.2))
