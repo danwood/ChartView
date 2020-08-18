@@ -2,13 +2,15 @@ import SwiftUI
 
 public enum ChartLimit : Hashable, CaseIterable {
 
-	case fromData
-	case zeroEnding
-	case zeroOrFiveEnding
-	case explicit(max: Double)
+	case fromData			// use actual max/min value for chart, not rounded up to a nice figure
+	case powerOfTen			// round up to nearest power of 10, e.g. 245 rounded up to 1000
+	case halfPowerOfTen		// round up as .powerOfTen or half of that, so 245 rounded up to 500
+	case firstSignificant	// round up first significant figure, e.g. 2453 rounded up to 3000
+	case secondSignificant	// round up second significant figure, e.g. 2453 rounted up to 2500
+	case explicit(max: Double)	// other value as specified
 
 	public static var allCases: [ChartLimit] {
-		return [.fromData, .zeroEnding, .zeroOrFiveEnding, explicit(max: -1)]
+		return [.fromData, .powerOfTen, .halfPowerOfTen, firstSignificant, secondSignificant, explicit(max: -1)]
 	}
 
 }
