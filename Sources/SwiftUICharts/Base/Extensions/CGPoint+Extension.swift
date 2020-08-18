@@ -17,8 +17,9 @@ extension CGPoint {
 		var minimumValue: Double = 0.0
 		var maximumValue: Double = 0.0
 
-		if case .explicit(let value) = limits.max {
-			maximumValue = value
+		if case .explicit(let range) = limits.yLimit {
+			maximumValue = range.lowerBound
+			minimumValue = range.upperBound
 		}
 		else {
 			maximumValue = data.max() ?? 0.0	// get the data's max, but then we'll probably adjust below
@@ -31,7 +32,7 @@ extension CGPoint {
 
 			// Now adjust maximum from data to round up to a nice value
 
-			switch(limits.max) {
+			switch(limits.yLimit) {
 				case .powerOfTen:
 					// bump up to 10, 100, 1000 etc.
 					let numPlaces = ceil(log10(maximumValue))	// round up the log10
@@ -99,7 +100,6 @@ extension CGPoint {
 		}
 
 		if limits.symmetrical {
-			// Our specification is that if this is set, then we IGNORE limits.min preferences (though we will make use of minimum values) to keep the chart symmetrical.
 			minimumValue = -maximumValue	// same below the axis as above
 		}
 		else {
@@ -110,14 +110,7 @@ extension CGPoint {
 
 			// TODO
 
-			if let minLimits = limits.min {
-
-
-
-			} else {	// no mininum limit specified, so use the same preference as the maximum, but with our minimum value
-
-
-			}
+			
 		}
 
 
