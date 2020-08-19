@@ -117,6 +117,17 @@ public struct Line: View {
 		return minimumValue ..< maximumValue
 	}
 
+	var yOffset : CGFloat {
+		let yStride = Double(frame.size.height) / (yRange.upperBound - yRange.lowerBound)
+
+		if yRange.lowerBound > 0 {
+			return 0.0
+		}
+		else {
+			return CGFloat(-yRange.lowerBound * Double(yStride))	// not quite right I bet
+		}
+	}
+
 	var step: CGPoint {
 		return CGPoint.getStep(frame: frame, lineWidth: style.lineWidth, data: chartData.data, yRange:yRange)
     }
@@ -127,11 +138,11 @@ public struct Line: View {
 		if style.curvedLines {
             return Path.quadCurvedPathWithPoints(points: points,
                                                  step: step,
-												 yOffset: style.lineWidth/2)
+												 yOffset: yOffset)
         }
 
 		return Path.linePathWithPoints(points: points, step: step,
-									   yOffset: style.lineWidth/2)
+									   yOffset: yOffset)
     }
     
     var closedPath: Path {
@@ -140,11 +151,11 @@ public struct Line: View {
 		if style.curvedLines {
             return Path.quadClosedCurvedPathWithPoints(points: points,
                                             step: step,
-											yOffset: style.lineWidth/2)
+											yOffset: yOffset)
         }
 
 		return Path.closedLinePathWithPoints(points: points, step: step,
-											 yOffset: style.lineWidth/2)
+											 yOffset: yOffset)
     }
     
     public var body: some View {
