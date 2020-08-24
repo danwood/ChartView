@@ -38,6 +38,13 @@ public class ChartStyle: ObservableObject {
 
 	public var limits : ChartLimits = ChartLimits(yLimit: .fromData)
 
+	/// Initialize with a single background color and an array of `ColorGradient` for the foreground
+	/// - Parameters:
+	///   - backgroundColor: a `Color`
+	///   - foregroundColor: array of `ColorGradient`
+	///   - lineWidth: width of the line
+	///   - curvedLines: should lines be smoothed/curved, or jagged?
+	///   - showBackground: should background color be shown
 	public init(backgroundColor: Color, foregroundColor: [ColorGradient],
 				lineWidth: CGFloat = 3.0, curvedLines : Bool = true, showBackground : Bool = true) {
         self.backgroundColor = ColorGradient.init(backgroundColor)
@@ -47,6 +54,13 @@ public class ChartStyle: ObservableObject {
 		self.showBackground = showBackground
     }
     
+	/// Initialize with a single background color and a single `ColorGradient` for the foreground
+	/// - Parameters:
+	///   - backgroundColor: a `Color`
+	///   - foregroundColor: a `ColorGradient`
+	///   - lineWidth: width of the line
+	///   - curvedLines: should lines be smoothed/curved, or jagged?
+	///   - showBackground: should background color be shown
     public init(backgroundColor: Color, foregroundColor: ColorGradient,
 				lineWidth: CGFloat = 3.0, curvedLines : Bool = true, showBackground : Bool = true) {
         self.backgroundColor = ColorGradient.init(backgroundColor)
@@ -56,6 +70,13 @@ public class ChartStyle: ObservableObject {
 		self.showBackground = showBackground
     }
     
+	/// Initialize with a single background `ColorGradient` and a single `ColorGradient` for the foreground
+	/// - Parameters:
+	///   - backgroundColor: a `ColorGradient`
+	///   - foregroundColor: a `ColorGradient`
+	///   - lineWidth: width of the line
+	///   - curvedLines: should lines be smoothed/curved, or jagged?
+	///   - showBackground: should background color be shown
     public init(backgroundColor: ColorGradient, foregroundColor: ColorGradient,
 				lineWidth: CGFloat = 3.0, curvedLines : Bool = true, showBackground : Bool = true) {
         self.backgroundColor = backgroundColor
@@ -65,6 +86,13 @@ public class ChartStyle: ObservableObject {
 		self.showBackground = showBackground
     }
     
+	/// Initialize with a  single background `ColorGradient` and an array of `ColorGradient` for the foreground
+	/// - Parameters:
+	///   - backgroundColor: a `ColorGradient`
+	///   - foregroundColor: array of `ColorGradient`
+	///   - lineWidth: width of the line
+	///   - curvedLines: should lines be smoothed/curved, or jagged?
+	///   - showBackground: should background color be shown
     public init(backgroundColor: ColorGradient, foregroundColor: [ColorGradient],
 				lineWidth: CGFloat = 3.0, curvedLines : Bool = true, showBackground : Bool = true) {
         self.backgroundColor = backgroundColor
@@ -72,43 +100,5 @@ public class ChartStyle: ObservableObject {
 		self.lineWidth = lineWidth
 		self.curvedLines = curvedLines
 		self.showBackground = showBackground
-
-// TODO apply documentation of below to above redone methods!!!!
-
-	/// Initialize with a single background color and an array of `ColorGradient` for the foreground
-	/// - Parameters:
-	///   - backgroundColor: a `Color`
-	///   - foregroundColor: array of `ColorGradient`
-    public init(backgroundColor: Color, foregroundColor: [ColorGradient]) {
-        self.backgroundColor = ColorGradient.init(backgroundColor)
-        self.foregroundColor = foregroundColor
     }
-
-	/// Initialize with a single background color and a single `ColorGradient` for the foreground
-	/// - Parameters:
-	///   - backgroundColor: a `Color`
-	///   - foregroundColor: a `ColorGradient`
-    public init(backgroundColor: Color, foregroundColor: ColorGradient) {
-        self.backgroundColor = ColorGradient.init(backgroundColor)
-        self.foregroundColor = [foregroundColor]
-    }
-
-	/// Initialize with a single background `ColorGradient` and a single `ColorGradient` for the foreground
-	/// - Parameters:
-	///   - backgroundColor: a `ColorGradient`
-	///   - foregroundColor: a `ColorGradient`
-    public init(backgroundColor: ColorGradient, foregroundColor: ColorGradient) {
-        self.backgroundColor = backgroundColor
-        self.foregroundColor = [foregroundColor]
-    }
-
-	/// Initialize with a  single background `ColorGradient` and an array of `ColorGradient` for the foreground
-	/// - Parameters:
-	///   - backgroundColor: a `ColorGradient`
-	///   - foregroundColor: array of `ColorGradient`
-    public init(backgroundColor: ColorGradient, foregroundColor: [ColorGradient]) {
-        self.backgroundColor = backgroundColor
-        self.foregroundColor = foregroundColor
-    }
-    
 }
