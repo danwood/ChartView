@@ -25,11 +25,11 @@ public struct Line: View {
 			maximumValue = range.upperBound
 		}
 		else {
-			maximumValue = chartData.data.max() ?? 0.0	// get the data's max, but then we'll probably adjust below
+			maximumValue = chartData.points.max() ?? 0.0	// get the data's max, but then we'll probably adjust below
 
 			if style.limits.symmetrical {
 				// If we want symmetrical above and below Y axis, we have to take absolute value of negative values into account
-				let minMagnitude = abs(chartData.data.min() ?? 0.0)
+				let minMagnitude = abs(chartData.points.min() ?? 0.0)
 				maximumValue = max(maximumValue, minMagnitude)
 			}
 
@@ -108,7 +108,7 @@ public struct Line: View {
 		else {
 			// Not symmetrical - now we get a chance to look at any minimum specified
 
-			minimumValue = chartData.data.min() ?? 0.0
+			minimumValue = chartData.points.min() ?? 0.0
 
 
 			// TODO
@@ -237,7 +237,7 @@ extension Line {
 	/// - Parameter point: location of data point on graph, near touch location
     private func getClosestDataPoint(point: CGPoint) {
         let index = Int(round((point.x)/step.x))
-        if (index >= 0 && index < self.chartData.data.count){
+        if (index >= 0 && index < self.chartData.points.count){
             self.chartValue.currentValue = self.chartData.points[index]
         }
     }
